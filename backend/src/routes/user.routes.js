@@ -2,10 +2,10 @@ const express = require("express");
 
 const router = express.Router();
 
-const {
-    getAllUsers
-} = require("../controllers/user.controller");
+const UserController = require("../controllers/user.controller");
 
-router.get("/", getAllUsers);
+router.get("/email/:email",UserController.getUserByEmail
+);
+router.get("/phone/:phone",UserController.getUserByPhone);
 
 module.exports = router;
