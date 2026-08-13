@@ -7,11 +7,6 @@ const Hero = () => {
     return (
         <section className="py-16 sm:py-20 lg:py-28">
             <div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
-
-                <span className="inline-flex rounded-full border bg-slate-100 px-4 py-1 text-sm font-medium text-slate-700">
-                    🇧🇩 Smart Income Tax Management
-                </span>
-
                 <h1 className="mt-6 text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">
                     Manage Your Taxes
                     <span className="block text-slate-500">

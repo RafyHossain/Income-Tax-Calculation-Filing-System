@@ -28,7 +28,7 @@ const Navbar = () => {
         <nav className="hidden flex-1 justify-center md:flex">
           <div className="flex items-center gap-8">
             <NavItem to="/">Home</NavItem>
-            <NavItem to="/features">Features</NavItem>
+            <NavItem to="/dashboard">Dashboard</NavItem>
           </div>
         </nav>
 

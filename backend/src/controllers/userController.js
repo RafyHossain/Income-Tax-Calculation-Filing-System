@@ -1,44 +1,50 @@
 const bcrypt = require("bcrypt");
 const validator = require("validator");
-const UserModel = require("../models/UserModel");
 const jwt = require("jsonwebtoken");
 
-class UserController {
-  static async getUserByEmail(req, res) {
+const UserModel = require("../models/UserModel");
+
+const UserController = {
+  async getUserByEmail(req, res) {
     try {
       const email = req.params.email;
+
       const user = await UserModel.findByEmail(email);
-      res.json({
+
+      return res.status(200).json({
         success: true,
         data: user,
       });
     } catch (error) {
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: error.message,
       });
     }
-  }
+  },
 
-  static async getUserByPhone(req, res) {
+  async getUserByPhone(req, res) {
     try {
       const phone = req.params.phone;
+
       const user = await UserModel.findByphone(phone);
-      res.json({
+
+      return res.status(200).json({
         success: true,
         data: user,
       });
     } catch (error) {
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: error.message,
       });
     }
-  }
+  },
 
-  static async registerUser(req, res) {
+  async registerUser(req, res) {
     try {
       const { full_name, email, password, phone, nid } = req.body;
+
       if (!full_name || !email || !password || !phone || !nid) {
         return res.status(400).json({
           success: false,
@@ -61,6 +67,7 @@ class UserController {
       }
 
       const existingUser = await UserModel.findByEmail(email);
+
       if (existingUser) {
         return res.status(409).json({
           success: false,
@@ -77,6 +84,7 @@ class UserController {
         phone,
         nid,
       });
+
       return res.status(201).json({
         success: true,
         message: "User registered successfully.",
@@ -87,85 +95,87 @@ class UserController {
         message: error.message,
       });
     }
-  }
+  },
 
-  static async loginUser(req, res) {
-    const { email, password } = req.body;
-
-    if (!email || !password) {
-      return res.status(400).json({
-        success: false,
-        message: "Email and password are required.",
-      });
-    }
-
-    const user = await UserModel.findByEmail(email);
-    if (!user) {
-      return res.status(401).json({
-        success: false,
-        message: "Invalid email or password.",
-      });
-    }
-
-    const isPasswordCorrect = await bcrypt.compare(password, user.password);
-
-    if (!isPasswordCorrect) {
-      return res.status(401).json({
-        success: false,
-        message: "Invalid email or password.",
-      });
-    }
-
-    const payload = {
-      id: user.id,
-      role: user.role,
-    };
-
-    const token = jwt.sign(payload, process.env.JWT_SECRET, {
-      expiresIn: "1d",
-    });
-
-    return res.status(200).json({
-      success: true,
-      message: "Login successful.",
-      token,
-      user: {
-        id: user.id,
-        full_name: user.full_name,
-        email: user.email,
-        role: user.role,
-      },
-    });
-  }
-
-  static async getProfile(req, res) {
-
+  async loginUser(req, res) {
     try {
+      const { email, password } = req.body;
 
-        const user = await UserModel.findById(req.user.id);
-
-        if (!user) {
-            return res.status(404).json({
-                success: false,
-                message: "User not found."
-            });
-        }
-
-        return res.status(200).json({
-            success: true,
-            data: user
+      if (!email || !password) {
+        return res.status(400).json({
+          success: false,
+          message: "Email and password are required.",
         });
+      }
 
+      const user = await UserModel.findByEmail(email);
+
+      if (!user) {
+        return res.status(401).json({
+          success: false,
+          message: "Invalid email or password.",
+        });
+      }
+
+      const isPasswordCorrect = await bcrypt.compare(password, user.password);
+
+      if (!isPasswordCorrect) {
+        return res.status(401).json({
+          success: false,
+          message: "Invalid email or password.",
+        });
+      }
+
+      const payload = {
+        id: user.id,
+        role: user.role,
+      };
+
+      const token = jwt.sign(payload, process.env.JWT_SECRET, {
+        expiresIn: "1d",
+      });
+
+      return res.status(200).json({
+        success: true,
+        message: "Login successful.",
+        token,
+        user: {
+          id: user.id,
+          full_name: user.full_name,
+          email: user.email,
+          role: user.role,
+        },
+      });
     } catch (error) {
-
-        return res.status(500).json({
-            success: false,
-            message: error.message
-        });
-
+      return res.status(500).json({
+        success: false,
+        message: error.message,
+      });
     }
+  },
 
-}
-}
+  async getProfile(req, res) {
+    try {
+      const user = await UserModel.findById(req.user.id);
+
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          message: "User not found.",
+        });
+      }
+
+      return res.status(200).json({
+        success: true,
+        data: user,
+      });
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        message: error.message,
+      });
+    }
+  },
+};
 
 module.exports = UserController;

@@ -8,6 +8,7 @@ import {
   FileText,
   LogOut,
   X,
+  House,
 } from "lucide-react";
 
 import useAuth from "@/hooks/useAuth";
@@ -61,8 +62,16 @@ const DashboardSidebar = ({
     navigate("/");
   };
 
+  const handleGoHome = () => {
+    setSidebarOpen(false);
+
+    navigate("/");
+  };
+
   return (
     <>
+      {/* Mobile Overlay */}
+
       {sidebarOpen && (
         <div
           onClick={() => setSidebarOpen(false)}
@@ -70,11 +79,13 @@ const DashboardSidebar = ({
         />
       )}
 
+      {/* Sidebar */}
+
       <aside
         className={`
           fixed
-          top-0
           left-0
+          top-0
           z-50
           flex
           h-screen
@@ -91,13 +102,17 @@ const DashboardSidebar = ({
               : "-translate-x-full"
           }
 
-          md:static
+          md:sticky
+          md:top-0
           md:translate-x-0
         `}
       >
-        {/* Header */}
-        <div className="border-b p-5">
+        {/* Sidebar Header */}
+
+        <div className="shrink-0 border-b p-5">
+
           <div className="flex items-center justify-between">
+
             <h2 className="text-xl font-bold">
               IncomeTax
             </h2>
@@ -105,14 +120,21 @@ const DashboardSidebar = ({
             <button
               type="button"
               className="md:hidden"
-              onClick={() => setSidebarOpen(false)}
+              onClick={() =>
+                setSidebarOpen(false)
+              }
             >
               <X className="h-6 w-6" />
             </button>
+
           </div>
+
+
+          {/* User Information */}
 
           {user && (
             <div className="mt-6 flex items-center gap-3">
+
               <img
                 src={
                   user.photoURL ||
@@ -124,58 +146,98 @@ const DashboardSidebar = ({
                 className="h-12 w-12 rounded-full border object-cover"
               />
 
-              <div>
-                <h3 className="font-semibold">
+              <div className="min-w-0">
+
+                <h3 className="truncate font-semibold">
                   {user.full_name}
                 </h3>
 
                 <p className="text-sm capitalize text-slate-500">
                   {user.role}
                 </p>
+
               </div>
+
             </div>
           )}
+
         </div>
 
-        {/* Menu */}
-        <nav className="flex-1 space-y-2 p-4">
-          {menus.map((menu) => {
-            const Icon = menu.icon;
 
-            return (
-              <NavLink
-                key={menu.path}
-                to={menu.path}
-                end={menu.path === "/dashboard"}
-                onClick={() => setSidebarOpen(false)}
-                className={({ isActive }) =>
-                  `flex items-center gap-3 rounded-xl px-4 py-3 transition ${
-                    isActive
-                      ? "bg-slate-900 text-white"
-                      : "text-slate-600 hover:bg-slate-100"
-                  }`
-                }
-              >
-                <Icon className="h-5 w-5" />
+        {/* Scrollable Menu */}
 
-                <span>{menu.name}</span>
-              </NavLink>
-            );
-          })}
+        <nav className="min-h-0 flex-1 overflow-y-auto p-4">
+
+          <div className="space-y-2">
+
+            {menus.map((menu) => {
+              const Icon = menu.icon;
+
+              return (
+                <NavLink
+                  key={menu.path}
+                  to={menu.path}
+                  end={menu.path === "/dashboard"}
+                  onClick={() =>
+                    setSidebarOpen(false)
+                  }
+                  className={({ isActive }) =>
+                    `flex items-center gap-3 rounded-xl px-4 py-3 transition ${
+                      isActive
+                        ? "bg-slate-900 text-white"
+                        : "text-slate-600 hover:bg-slate-100"
+                    }`
+                  }
+                >
+                  <Icon className="h-5 w-5 shrink-0" />
+
+                  <span>
+                    {menu.name}
+                  </span>
+                </NavLink>
+              );
+            })}
+
+          </div>
+
         </nav>
 
-        {/* Footer */}
-        <div className="border-t p-4">
+
+        {/* Sidebar Footer */}
+
+        <div className="shrink-0 space-y-2 border-t p-4">
+
+          {/* Home */}
+
+          <button
+            type="button"
+            onClick={handleGoHome}
+            className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-slate-600 transition hover:bg-slate-100"
+          >
+            <House className="h-5 w-5 shrink-0" />
+
+            <span>
+              Home
+            </span>
+          </button>
+
+
+          {/* Logout */}
+
           <button
             type="button"
             onClick={handleLogout}
             className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-red-600 transition hover:bg-red-50"
           >
-            <LogOut className="h-5 w-5" />
+            <LogOut className="h-5 w-5 shrink-0" />
 
-            <span>Logout</span>
+            <span>
+              Logout
+            </span>
           </button>
+
         </div>
+
       </aside>
     </>
   );

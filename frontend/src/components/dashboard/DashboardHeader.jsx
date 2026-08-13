@@ -1,4 +1,4 @@
-import { Bell, Menu } from "lucide-react";
+import { Menu } from "lucide-react";
 
 import UserDropdown from "@/components/common/UserDropdown";
 
@@ -23,14 +23,7 @@ const DashboardHeader = ({ sidebarOpen, setSidebarOpen }) => {
 
         {/* Right */}
         <div className="flex items-center gap-3">
-          <button
-            type="button"
-            className="relative rounded-lg border p-2 transition hover:bg-slate-100"
-          >
-            <Bell className="h-5 w-5" />
-
-            <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-red-500"></span>
-          </button>
+        
 
           <UserDropdown />
         </div>
